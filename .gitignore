@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/CmsShoppingCart/CmsShoppingCart/Images/Uploads/Products
+/CmsShoppingCart/CmsShoppingCart/Scripts/dropzone
