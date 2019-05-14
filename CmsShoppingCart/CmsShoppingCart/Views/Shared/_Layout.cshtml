@@ -20,14 +20,20 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @Html.Action("PagesMenuPartial", "Pages");
+                    @Html.Action("PagesMenuPartial", "Pages")
                    </ul>
+                <ul class="navbar-collapse collapse navbar-right">
+                    @Html.Action("CartPartial", "Cart")
+                </ul>
             </div>
         </div>
     </div>
     <div class="container body-content">
         <div class="row">
 
+            <div class="col-xs-12 col-md-2">
+                @Html.Action("CategoryMenuPartial", "Shop")
+            </div>
 
             @if (ViewBag.Sidebar == "Yes")
             {
