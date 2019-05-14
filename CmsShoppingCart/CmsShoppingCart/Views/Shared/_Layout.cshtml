@@ -21,10 +21,51 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @Html.Action("PagesMenuPartial", "Pages")
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li><a href="/account/logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        if (ViewBag.Title == "Login")
+                        {
+                            <li class="active"><a href="/account/login">Login</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/account/login">Login</a></li>
+                        }
+                    }
+
+                    @if (Request.IsAuthenticated && User.IsInRole("User"))
+                    {
+                        if (ViewBag.Title == "User Profile" || ViewBag.Title == "Orders")
+                        {
+                            <li class="active">@Html.Action("UserNavPartial", "Account", new { area = "" })</li>
+                        }
+                        else
+                        {
+                            <li>@Html.Action("UserNavPartial", "Account", new { area = "" })</li>
+                        }
+                    }
                    </ul>
-                <ul class="navbar-collapse collapse navbar-right">
-                    @Html.Action("CartPartial", "Cart")
-                </ul>
+
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <ul class="navbar-collapse collapse navbar-right adminarea">
+                        <li>@Html.ActionLink("Admin Area", "Index", "Dashboard", new { area = "Admin" }, null) </li>
+                    </ul>
+                }
+                else
+                {
+                    if (ViewBag.Title != "Cart Details")
+                    {
+                        <ul class="navbar-collapse collapse navbar-right">
+                            @Html.Action("CartPartial", "Cart")
+                        </ul>
+                    }
+                }
+
             </div>
         </div>
     </div>
