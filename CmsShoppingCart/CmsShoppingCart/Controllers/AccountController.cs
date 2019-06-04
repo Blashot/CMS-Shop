@@ -31,7 +31,6 @@ namespace CmsShoppingCart.Controllers
             if (!string.IsNullOrEmpty(username))
                 return RedirectToAction("user-profile");
 
-            // Return view
             return View();
         }
 
@@ -39,13 +38,11 @@ namespace CmsShoppingCart.Controllers
         [HttpPost]
         public ActionResult Login(LoginUserVM model)
         {
-            // Check model state
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Check if the user is valid
 
             bool isValid = false;
 
@@ -85,13 +82,11 @@ namespace CmsShoppingCart.Controllers
         [HttpPost]
         public ActionResult CreateAccount(UserVM model)
         {
-            // Check model state
             if (!ModelState.IsValid)
             {
                 return View("CreateAccount", model);
             }
 
-            // Check if passwords match
             if (!model.Password.Equals(model.ConfirmPassword))
             {
                 ModelState.AddModelError("", "Passwords do not match.");
@@ -100,7 +95,6 @@ namespace CmsShoppingCart.Controllers
 
             using (Db db = new Db())
             {
-                // Make sure username is unique
                 if (db.Users.Any(x => x.Username.Equals(model.Username)))
                 {
                     ModelState.AddModelError("", "Username " + model.Username + " is taken.");
@@ -108,7 +102,6 @@ namespace CmsShoppingCart.Controllers
                     return View("CreateAccount", model);
                 }
 
-                // Create userDTO
                 UserDTO userDTO = new UserDTO()
                 {
                     FirstName = model.FirstName,
@@ -118,13 +111,10 @@ namespace CmsShoppingCart.Controllers
                     Password = model.Password
                 };
 
-                // Add the DTO
                 db.Users.Add(userDTO);
 
-                // Save
                 db.SaveChanges();
 
-                // Add to UserRolesDTO
                 int id = userDTO.Id;
 
                 UserRoleDTO userRolesDTO = new UserRoleDTO()
@@ -140,7 +130,6 @@ namespace CmsShoppingCart.Controllers
             // Create a TempData message
             TempData["SM"] = "You are now registered and can login.";
 
-            // Redirect
             return Redirect("~/account/login");
         }
 
@@ -158,18 +147,14 @@ namespace CmsShoppingCart.Controllers
         [Authorize]
         public ActionResult UserNavPartial()
         {
-            // Get username
             string username = User.Identity.Name;
 
-            // Declare model
             UserNavPartialVM model;
 
             using (Db db = new Db())
             {
-                // Get the user
                 UserDTO dto = db.Users.FirstOrDefault(x => x.Username == username);
 
-                // Build the model
                 model = new UserNavPartialVM()
                 {
                     FirstName = dto.FirstName,
@@ -177,7 +162,6 @@ namespace CmsShoppingCart.Controllers
                 };
             }
 
-            // Return partial view with model
             return PartialView(model);
         }
 
@@ -187,22 +171,17 @@ namespace CmsShoppingCart.Controllers
         [Authorize]
         public ActionResult UserProfile()
         {
-            // Get username
             string username = User.Identity.Name;
 
-            // Declare model
             UserProfileVM model;
 
             using (Db db = new Db())
             {
-                // Get user
                 UserDTO dto = db.Users.FirstOrDefault(x => x.Username == username);
 
-                // Build model
                 model = new UserProfileVM(dto);
             }
 
-            // Return view with model
             return View("UserProfile", model);
         }
 
@@ -212,13 +191,11 @@ namespace CmsShoppingCart.Controllers
         [Authorize]
         public ActionResult UserProfile(UserProfileVM model)
         {
-            // Check model state
             if (!ModelState.IsValid)
             {
                 return View("UserProfile", model);
             }
 
-            // Check if passwords match if need be
             if (!string.IsNullOrWhiteSpace(model.Password))
             {
                 if (!model.Password.Equals(model.ConfirmPassword))
@@ -230,10 +207,8 @@ namespace CmsShoppingCart.Controllers
 
             using (Db db = new Db())
             {
-                // Get username
                 string username = User.Identity.Name;
 
-                // Make sure username is unique
                 if (db.Users.Where(x => x.Id != model.Id).Any(x => x.Username == username))
                 {
                     ModelState.AddModelError("", "Username " + model.Username + " already exists.");
@@ -241,7 +216,6 @@ namespace CmsShoppingCart.Controllers
                     return View("UserProfile", model);
                 }
 
-                // Edit DTO
                 UserDTO dto = db.Users.Find(model.Id);
 
                 dto.FirstName = model.FirstName;
@@ -254,14 +228,12 @@ namespace CmsShoppingCart.Controllers
                     dto.Password = model.Password;
                 }
 
-                // Save
                 db.SaveChanges();
             }
 
             // Set TempData message
             TempData["SM"] = "You have edited your profile!";
 
-            // Redirect
             return Redirect("~/account/user-profile");
         }
 

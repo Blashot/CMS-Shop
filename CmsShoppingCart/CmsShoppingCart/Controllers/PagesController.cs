@@ -75,10 +75,8 @@ namespace CmsShoppingCart.Controllers
 
         public ActionResult SidebarPartial()
         {
-            // Declare model
             SidebarVM model;
 
-            // Init model
             using (Db db = new Db())
             {
                 SidebarDTO dto = db.Sidebar.Find(1);
@@ -86,7 +84,6 @@ namespace CmsShoppingCart.Controllers
                 model = new SidebarVM(dto);
             }
 
-            // Return partial view with model
             return PartialView(model);
         }
 
